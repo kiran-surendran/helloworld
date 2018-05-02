@@ -1,0 +1,53 @@
+
+pipeline {
+  agent any
+  stages {
+     stage('Checkout') {
+      steps {
+ 	echo 'Copying MSGQ Lib'
+ 	sh 'cp -rf /home/user/messagequeue_repo/messagequeuelib .'
+ 	echo 'Copying WD Lib'
+        sh 'cp -rf /home/user/watchdog_repo/watchdoglib .'       
+      }
+     }
+
+     stage('Unit tests') {
+       agent {
+        dockerfile {
+	 dir "../${env.JOB_BASE_NAME}"
+         additionalBuildArgs '--no-cache'
+         args '-u 0:0 --cap-add NET_ADMIN -v /var/lib/jenkins/workspace/${JOB_BASE_NAME}:/var/lib/jenkins/workspace/${JOB_BASE_NAME}:rw,z'
+         } 
+        }     
+        environment {
+            COPY_PATH = "/var/lib/jenkins/workspace/${env.JOB_BASE_NAME}"
+}
+        steps {
+	   echo 'testing hook'
+           sh 'pwd'
+           sh 'cd /code/lanmanagement && nosetests --with-coverage --cover-erase --cover-html-dir=coverage --cover-package=lanmanagement --with-xunit test/test_controller.py || true'
+	   sh 'cp /code/lanmanagement/nosetests.xml $COPY_PATH && echo $COPY_PATH'
+		
+         }
+      }
+      stage('Report Building') {
+         steps {
+           sh 'pwd'
+           
+         }
+      }    
+  	
+  }
+    post {
+        always {
+	    sh 'pwd'
+            archiveArtifacts artifacts: "nosetests.xml", fingerprint: true
+	    step([$class: 'XUnitBuilder',
+                      thresholds: [
+                          [$class: 'SkippedThreshold', failureThreshold: '0'],
+                          [$class: 'FailedThreshold', failureThreshold: '0']],
+                          tools: [[$class: 'JUnitType', pattern: 'nosetests.xml']]])
+
+        }
+    }
+}
