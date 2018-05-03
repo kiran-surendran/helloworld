@@ -16,11 +16,6 @@ pipeline {
          } 
         }     
         environment {
-            dir('..')
-            {
-               sh '$pwd'
-
-            }
              
             COPY_PATH = "${HUDSON_HOME}/workspace/${env.JOB_BASE_NAME}"
           }
@@ -29,13 +24,13 @@ pipeline {
            sh 'pwd'
            sh 'cd /code/lanmanagement && python main.py >> out.log'
 	   sh 'cp /code/lanmanagement/out.log $COPY_PATH && echo $COPY_PATH'
-		
+	   myVar = "abc"	
          }
       }
       stage('Report Building') {
          steps {
            sh 'pwd'
-           
+           echo "${myVar}"
          }
       }    
   	
