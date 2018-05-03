@@ -25,8 +25,11 @@ pipeline {
            sh 'cd /code/lanmanagement && python main.py >> out.log'
 	   sh 'cp /code/lanmanagement/out.log $COPY_PATH && echo $COPY_PATH'
 	script {
-	   myVar = "abc"
+	   myVar = "ab"
 	}	
+dir('../') {
+sh 'pwd'
+}
          }
       }
       stage('Report Building') {
