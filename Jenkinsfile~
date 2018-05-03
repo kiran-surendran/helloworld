@@ -4,10 +4,7 @@ pipeline {
   stages {
      stage('Checkout') {
       steps {
- 	echo 'Copying MSGQ Lib'
- 	sh 'cp -rf /home/user/messagequeue_repo/messagequeuelib .'
- 	echo 'Copying WD Lib'
-        sh 'cp -rf /home/user/watchdog_repo/watchdoglib .'       
+ 	echo 'Copying MSGQ Lib' 
       }
      }
 
@@ -25,8 +22,8 @@ pipeline {
         steps {
 	   echo 'testing hook'
            sh 'pwd'
-           sh 'cd /code/lanmanagement && nosetests --with-coverage --cover-erase --cover-html-dir=coverage --cover-package=lanmanagement --with-xunit test/test_controller.py || true'
-	   sh 'cp /code/lanmanagement/nosetests.xml $COPY_PATH && echo $COPY_PATH'
+           sh 'cd /code/lanmanagement && python main.py >> out.log'
+	   sh 'cp /code/lanmanagement/out.log $COPY_PATH && echo $COPY_PATH'
 		
          }
       }
@@ -38,16 +35,5 @@ pipeline {
       }    
   	
   }
-    post {
-        always {
-	    sh 'pwd'
-            archiveArtifacts artifacts: "nosetests.xml", fingerprint: true
-	    step([$class: 'XUnitBuilder',
-                      thresholds: [
-                          [$class: 'SkippedThreshold', failureThreshold: '0'],
-                          [$class: 'FailedThreshold', failureThreshold: '0']],
-                          tools: [[$class: 'JUnitType', pattern: 'nosetests.xml']]])
-
-        }
-    }
+    
 }

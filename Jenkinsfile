@@ -13,11 +13,11 @@ pipeline {
         dockerfile {
 	 dir "../${env.JOB_BASE_NAME}"
          additionalBuildArgs '--no-cache'
-         args '-u 0:0 --cap-add NET_ADMIN -v /var/lib/jenkins/workspace/${JOB_BASE_NAME}:/var/lib/jenkins/workspace/${JOB_BASE_NAME}:rw,z'
+         args '-u 0:0 --cap-add NET_ADMIN -v ${HUDSON_HOME}/workspace/${JOB_BASE_NAME}:${HUDSON_HOME}/workspace/${JOB_BASE_NAME}:rw,z'
          } 
         }     
         environment {
-            COPY_PATH = "/var/lib/jenkins/workspace/${env.JOB_BASE_NAME}"
+            COPY_PATH = "${HUDSON_HOME}/workspace/${env.JOB_BASE_NAME}"
 }
         steps {
 	   echo 'testing hook'
