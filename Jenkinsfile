@@ -18,10 +18,10 @@ pipeline {
         environment {
             dir('..')
             {
-               sh 'pwd'
-               curd = $PWD
-               newpath="$PWD/${env.JOB_BASE_NAME}"
-               echo "${newpath}"
+               sh '$pwd'
+               CURRENT_DIR = $PWD
+               NEW_PATH="$PWD/${env.JOB_BASE_NAME}"
+               echo "${NEW_PATH}"
             }
              
             COPY_PATH = "${HUDSON_HOME}/workspace/${env.JOB_BASE_NAME}"
