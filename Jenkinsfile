@@ -16,8 +16,9 @@ pipeline {
          } 
         }     
         environment {
+	   PATH = dir('../')
              
-            COPY_PATH = "${HUDSON_HOME}/workspace/${env.JOB_BASE_NAME}"
+           COPY_PATH = "${PATH}/${env.JOB_BASE_NAME}"
           }
         steps {
 	   echo 'testing hook'

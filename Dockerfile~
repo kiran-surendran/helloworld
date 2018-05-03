@@ -1,26 +1,13 @@
 FROM python:2.7
-RUN apt-get update && apt-get -y install rsyslog && apt-get install vlan  
+RUN apt-get update 
 
 
 RUN mkdir -p /code/lanmanagement
-COPY lanmanagement /code/lanmanagement
+COPY main.py /code/lanmanagement
 
-RUN mkdir -p /code/messagequeuelib
-COPY messagequeuelib /code/messagequeuelib
-
-RUN mkdir -p /code/watchdoglib
-COPY watchdoglib /code/watchdoglib
-
-
-WORKDIR /code/lanmanagement
-RUN pwd
-
-RUN pip install -r requirements.txt
-RUN mkdir -p /etc/kamel
-RUN cp -r config /etc/kamel
 
 WORKDIR /code
-ENTRYPOINT service rsyslog start && /bin/bash
+
 
 
 

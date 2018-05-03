@@ -28,7 +28,7 @@ pipeline {
 	   myVar = "ab"
 	}	
 dir('../') {
-sh 'pwd'
+echo '${PWD}'
 }
          }
       }
